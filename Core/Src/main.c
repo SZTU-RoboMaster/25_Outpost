@@ -53,13 +53,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t rotateSpeed = 24; //0.8π rad/s，手册说�?
-bool_t rotateDirection = COUNTERCLOCKWISE; //�?哪转
-bool_t rotateState = FALSE; //转没�?
+uint8_t rotateSpeed = 24; //0.8π rad/s，手册说的
+bool_t rotateDirection = COUNTERCLOCKWISE; //朝哪转
+bool_t rotateState = FALSE; //转没转
 pid_t rotateCurrentPID;
 motor_measure_t motor_measure;
 int16_t give_current; //给电机的电流
-int16_t speed_rpm; //给电机的转�??
+int16_t speed_rpm; //给电机的转速
 first_kalman_filter_t first_kalman_filter;
 
 /* USER CODE END PV */
@@ -141,16 +141,16 @@ int main(void)
       }
 
       if (rotateState == TRUE){
-          if (abs(motor_measure.speed_rpm - rotateSpeed) < 6){//达到转�?�亮绿灯
+          if (abs(abs(motor_measure.speed_rpm) - rotateSpeed) < 3){//达到转速亮绿灯
               HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
               HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
               HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_RESET);
-          }else{//�?始转动，未达到转速，亮黄�?
+          }else{//开始转动，未达到转速，亮黄灯
                 HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
                 HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
                 HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_SET);
           }
-      }else{//没转亮红�?
+      }else{//没转亮红灯
             HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_SET);
             HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
             HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_RESET);
